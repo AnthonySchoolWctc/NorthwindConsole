@@ -19,6 +19,9 @@ do
   Console.WriteLine("3) Display Category and related products");
    Console.WriteLine("4) Display all Categories and their related products");
    Console.WriteLine("5) Add Product");
+    Console.WriteLine("6) Display Products based off of discontinued status");
+    Console.WriteLine("7) Edit a Product");
+    Console.WriteLine("8) Display a specific Product by any field");
   Console.WriteLine("Enter to quit");
   string? choice = Console.ReadLine();
   Console.Clear();
@@ -69,7 +72,8 @@ do
       else
       {
         logger.Info("Validation passed");
-        // TODO: save category to db
+        db.Categories.Add(category);
+        db.SaveChanges();
       }
     }
     if (!isValid)
@@ -113,8 +117,64 @@ do
       {
         Console.WriteLine($"\t{p.ProductName}");
       }
+    
+    
     }
   }
+    else if (choice == "5")
+  {
+    // Add Product
+    Product product = new();
+    Console.WriteLine("Enter Product Name:");
+    product.ProductName = Console.ReadLine()!;
+    Console.WriteLine("Enter the Product's Supplier id:");
+    product.SupplierId = Convert.ToInt32(Console.ReadLine());
+    Console.WriteLine("Enter the Product's Category id:");
+    product.CategoryId = Convert.ToInt32(Console.ReadLine());
+    console.WriteLine("Enter the Product's Quantity per unit:");
+    product.QuantityPerUnit = Console.ReadLine();
+    Console.WriteLine("Enter the Product's Unit Price:");
+    product.UnitPrice = Convert.ToDecimal(Console.ReadLine());
+    Console.WriteLine("Enter the Product's Units in stock:");
+    product.UnitsInStock = Convert.ToInt16(Console.ReadLine());
+    Console.WriteLine("Enter the Product's Units on order:");
+    product.UnitsOnOrder = Convert.ToInt16(Console.ReadLine());
+    Console.WriteLine("Enter the Product's Reorder level:");
+    product.ReorderLevel = Convert.ToInt16(Console.ReadLine());
+    product.Discontinued = false;
+        ValidationContext context = new ValidationContext(product, null, null);
+    List<ValidationResult> results = new List<ValidationResult>();
+
+
+   
+    if (isValid)
+    {
+      var db = new DataContext();
+
+      // check for unique name
+      if (db.Product.Any(p => p.ProductName == product.ProductName))
+      {
+        // generate validation error
+        isValid = false;
+        results.Add(new ValidationResult("Name exists", ["ProductName"]));
+      }
+      else
+      {
+        logger.Info("Validation passed");
+        db.Products.Add(product);
+        db.SaveChanges();
+      }
+    }
+    if (!isValid)
+    {
+      foreach (var result in results)
+      {
+        logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+      }
+    }
+  }
+  
+  
   else if (String.IsNullOrEmpty(choice))
   {
     break;
