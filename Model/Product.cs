@@ -9,9 +9,9 @@ public partial class Product
     public int ProductId { get; set; }
     [Required(ErrorMessage = "YO - Enter the name!")]
     public string ProductName { get; set; } = null!;
-    
+    [Required(ErrorMessage = "YO - Enter the supplier!")]
     public int? SupplierId { get; set; }
-    
+    [Required(ErrorMessage = "YO - Enter the category!")]
     public int? CategoryId { get; set; }
 
     public string? QuantityPerUnit { get; set; }

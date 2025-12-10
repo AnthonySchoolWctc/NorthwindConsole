@@ -138,20 +138,20 @@ do
     Console.WriteLine("Enter the Product's Supplier id:");
     var db = new DataContext();
     db.Suppliers.ToList().ForEach(s => Console.WriteLine($"{s.SupplierId}) {s.CompanyName}"));
-    product.SupplierId = Convert.ToInt32(Console.ReadLine());
+    product.SupplierId = int.Parse(Console.ReadLine());
     Console.WriteLine("Enter the Product's Category id:");
     db.Categories.ToList().ForEach(c => Console.WriteLine($"{c.CategoryId}) {c.CategoryName}"));
-    product.CategoryId = Convert.ToInt32(Console.ReadLine());
+    product.CategoryId = int.Parse(Console.ReadLine());
     Console.WriteLine("Enter the Product's Quantity per unit:");
     product.QuantityPerUnit = Console.ReadLine();
     Console.WriteLine("Enter the Product's Unit Price:");
-    product.UnitPrice = Convert.ToDecimal(Console.ReadLine());
+    product.UnitPrice = decimal.Parse(Console.ReadLine());
     Console.WriteLine("Enter the Product's Units in stock:");
-    product.UnitsInStock = Convert.ToInt16(Console.ReadLine());
+    product.UnitsInStock = short.Parse(Console.ReadLine());
     Console.WriteLine("Enter the Product's Units on order:");
-    product.UnitsOnOrder = Convert.ToInt16(Console.ReadLine());
+    product.UnitsOnOrder = short.Parse(Console.ReadLine());
     Console.WriteLine("Enter the Product's Reorder level:");
-    product.ReorderLevel = Convert.ToInt16(Console.ReadLine());
+    product.ReorderLevel = short.Parse(Console.ReadLine());
     product.Discontinued = false;
         ValidationContext context = new ValidationContext(product, null, null);
     List<ValidationResult> results = new List<ValidationResult>();
@@ -294,9 +294,11 @@ do
   {
     // Display a specific Product 
     Console.WriteLine("What is the Product ID you want to display?");
+    var db = new DataContext();
+    db.Products.OrderBy(p => p.ProductId).ToList().ForEach(p => Console.WriteLine($"{p.ProductId}) {p.ProductName}"));
     int id = int.Parse(Console.ReadLine()!);
     logger.Info($"Product ID {id} selected");
-    var db = new DataContext();
+    
     Product product = db.Products.FirstOrDefault(p => p.ProductId == id)!;
     Console.WriteLine($"Product ID: {product.ProductId}\nProduct Name: {product.ProductName}\nSupplier ID: {product.SupplierId}\nCategory ID: {product.CategoryId}\nQuantity per unit: {product.QuantityPerUnit}\nUnit Price: {product.UnitPrice}\nUnits in stock: {product.UnitsInStock}\nUnits on order: {product.UnitsOnOrder}\nReorder level: {product.ReorderLevel}\nDiscontinued: {product.Discontinued}");
     
